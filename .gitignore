@@ -1,0 +1,24 @@
+# Compiled class files
+target/
+*.class
+
+# Log files
+*.log
+catalina.out
+
+# IDE specific files
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Temp and backup files
+*.bak
+*.tmp
+*.swp
