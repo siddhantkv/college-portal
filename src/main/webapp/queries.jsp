@@ -35,16 +35,21 @@
             <a class="navbar-brand fw-bold" href="${pageContext.request.contextPath}/<%= isTeacher ? "teacher-dashboard.jsp" : "student-dashboard.jsp" %>">
                 <i class="bi bi-mortarboard-fill me-2"></i>College Portal
             </a>
-            <div class="d-flex align-items-center text-white">
-                <span class="me-3 small">
-                    <i class="bi bi-person-circle me-1"></i><%= userName %> (<%= deptName %>)
-                </span>
-                <a href="${pageContext.request.contextPath}/<%= isTeacher ? "teacher-dashboard.jsp" : "student-dashboard.jsp" %>" class="btn btn-outline-light btn-sm me-2">
-                    <i class="bi bi-house-door"></i> Dashboard
-                </a>
-                <a href="${pageContext.request.contextPath}/logout" class="btn btn-outline-light btn-sm">
-                    <i class="bi bi-box-arrow-right"></i> Logout
-                </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#queriesNav" aria-controls="queriesNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse mt-2 mt-lg-0" id="queriesNav">
+                <div class="ms-auto d-flex flex-column flex-lg-row align-items-lg-center gap-2 text-white">
+                    <span class="small">
+                        <i class="bi bi-person-circle me-1"></i><%= userName %> (<%= deptName %>)
+                    </span>
+                    <a href="${pageContext.request.contextPath}/<%= isTeacher ? "teacher-dashboard.jsp" : "student-dashboard.jsp" %>" class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-house-door"></i> Dashboard
+                    </a>
+                    <a href="${pageContext.request.contextPath}/logout" class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
+                </div>
             </div>
         </div>
     </nav>

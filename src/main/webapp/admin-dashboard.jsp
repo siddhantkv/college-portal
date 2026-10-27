@@ -30,13 +30,18 @@
             <a class="navbar-brand fw-bold" href="#">
                 <i class="bi bi-shield-lock-fill text-warning me-2"></i>Admin Console
             </a>
-            <div class="d-flex align-items-center">
-                <span class="text-light me-3">
-                    <i class="bi bi-person-circle me-1"></i>Welcome, <strong><%= session.getAttribute("userName") %></strong>
-                </span>
-                <a href="${pageContext.request.contextPath}/logout" class="btn btn-outline-danger btn-sm">
-                    <i class="bi bi-box-arrow-right me-1"></i>Logout
-                </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav" aria-controls="adminNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse mt-2 mt-lg-0" id="adminNav">
+                <div class="ms-auto d-flex flex-column flex-lg-row align-items-lg-center gap-2">
+                    <span class="text-light">
+                        <i class="bi bi-person-circle me-1"></i>Welcome, <strong><%= session.getAttribute("userName") %></strong>
+                    </span>
+                    <a href="${pageContext.request.contextPath}/logout" class="btn btn-outline-danger btn-sm mt-2 mt-lg-0">
+                        <i class="bi bi-box-arrow-right me-1"></i>Logout
+                    </a>
+                </div>
             </div>
         </div>
     </nav>

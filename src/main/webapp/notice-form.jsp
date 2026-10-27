@@ -39,13 +39,18 @@
             <a class="navbar-brand fw-bold" href="${pageContext.request.contextPath}/teacher-dashboard.jsp">
                 <i class="bi bi-mortarboard-fill me-2"></i>College Portal
             </a>
-            <div class="d-flex align-items-center">
-                <a href="${pageContext.request.contextPath}/notices" class="btn btn-outline-light btn-sm me-2">
-                    <i class="bi bi-arrow-left me-1"></i>Back to Notices
-                </a>
-                <a href="${pageContext.request.contextPath}/logout" class="btn btn-outline-light btn-sm">
-                    <i class="bi bi-box-arrow-right me-1"></i>Logout
-                </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#noticeFormNav" aria-controls="noticeFormNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse mt-2 mt-lg-0" id="noticeFormNav">
+                <div class="ms-auto d-flex flex-column flex-lg-row align-items-lg-center gap-2">
+                    <a href="${pageContext.request.contextPath}/notices" class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-arrow-left me-1"></i>Back to Notices
+                    </a>
+                    <a href="${pageContext.request.contextPath}/logout" class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-box-arrow-right me-1"></i>Logout
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
