@@ -48,6 +48,10 @@ public class AdminServlet extends HttpServlet {
                     userDAO.updateStatus(teacherId, "REJECTED");
                     response.sendRedirect(request.getContextPath() + "/admin?status=rejected");
                     return;
+                } else if ("delete".equalsIgnoreCase(action)) {
+                    userDAO.deleteUser(teacherId);
+                    response.sendRedirect(request.getContextPath() + "/admin?status=deleted");
+                    return;
                 }
             } catch (NumberFormatException e) {
                 // Ignore invalid ID
@@ -57,6 +61,10 @@ public class AdminServlet extends HttpServlet {
         // Fetch all pending teacher registrations
         List<User> pendingTeachers = userDAO.getPendingTeachers();
         request.setAttribute("pendingTeachers", pendingTeachers);
+
+        // Fetch all active/approved teachers for removal management
+        List<User> activeTeachers = userDAO.getActiveTeachers();
+        request.setAttribute("activeTeachers", activeTeachers);
 
         // Forward to admin dashboard JSP
         request.getRequestDispatcher("/admin-dashboard.jsp").forward(request, response);

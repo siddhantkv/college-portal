@@ -9,6 +9,7 @@
         return;
     }
     List<User> pendingTeachers = (List<User>) request.getAttribute("pendingTeachers");
+    List<User> activeTeachers = (List<User>) request.getAttribute("activeTeachers");
     String statusMsg = request.getParameter("status");
 %>
 <!DOCTYPE html>
@@ -63,6 +64,11 @@
         <% } else if ("rejected".equalsIgnoreCase(statusMsg)) { %>
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 <i class="bi bi-x-circle-fill me-2"></i>Teacher registration request has been <strong>rejected</strong>.
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <% } else if ("deleted".equalsIgnoreCase(statusMsg)) { %>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-trash-fill me-2"></i>Teacher ID has been <strong>permanently deleted / removed</strong> from the portal.
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <% } %>
@@ -127,6 +133,66 @@
                 <% } %>
             </div>
         </div>
+
+        <!-- Active Teachers Management Card (Delete / Remove Teacher who left college) -->
+        <div class="card shadow-sm border-0 mt-5">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="card-title fw-bold mb-0 text-success">
+                    <i class="bi bi-people-fill me-2"></i>Active Faculty / Teachers Directory
+                </h5>
+                <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2">
+                    Manage Faculty Accounts
+                </span>
+            </div>
+            <div class="card-body p-0">
+                <% if (activeTeachers != null && !activeTeachers.isEmpty()) { %>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Faculty Name</th>
+                                    <th>Email</th>
+                                    <th>Department</th>
+                                    <th>Joined Date</th>
+                                    <th class="text-center">Remove / Delete ID</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% 
+                                int tIndex = 1;
+                                for (User activeTeacher : activeTeachers) { 
+                                %>
+                                <tr>
+                                    <td><%= tIndex++ %></td>
+                                    <td class="fw-semibold text-dark">
+                                        <i class="bi bi-person-badge text-primary me-1"></i>Prof. <%= activeTeacher.getName() %>
+                                    </td>
+                                    <td><%= activeTeacher.getEmail() %></td>
+                                    <td><span class="badge bg-primary-subtle text-primary border border-primary-subtle"><%= activeTeacher.getDepartmentName() %></span></td>
+                                    <td><%= activeTeacher.getCreatedAt() != null ? activeTeacher.getCreatedAt().toString().substring(0, 10) : "N/A" %></td>
+                                    <td class="text-center">
+                                        <a href="${pageContext.request.contextPath}/admin?action=delete&id=<%= activeTeacher.getId() %>" 
+                                           class="btn btn-outline-danger btn-sm"
+                                           onclick="return confirm('WARNING: Are you sure you want to permanently delete Prof. <%= activeTeacher.getName() %>? All their notices and study materials will also be removed.');">
+                                            <i class="bi bi-person-x-fill me-1"></i>Delete Teacher ID
+                                        </a>
+                                    </td>
+                                </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } else { %>
+                    <div class="text-center py-5">
+                        <i class="bi bi-person-x text-muted display-4"></i>
+                        <h5 class="fw-semibold mt-3 text-secondary">No active teachers found</h5>
+                        <p class="text-muted small">Approved faculty members will appear here.</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+
     </div>
 
     <!-- Bootstrap 5 JS -->

@@ -148,6 +148,58 @@ public class UserDAO {
     }
 
     /**
+     * Retrieves all approved active teachers across all departments.
+     * Used by Admin to manage and remove teachers who leave the college.
+     */
+    public List<User> getActiveTeachers() {
+        List<User> list = new ArrayList<>();
+        String sql = "SELECT u.id, u.name, u.email, u.role, u.department_id, u.status, u.created_at, d.name AS dept_name " +
+                     "FROM users u " +
+                     "LEFT JOIN departments d ON u.department_id = d.id " +
+                     "WHERE u.role = 'TEACHER' AND u.status = 'APPROVED' " +
+                     "ORDER BY d.name ASC, u.name ASC";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setName(rs.getString("name"));
+                user.setEmail(rs.getString("email"));
+                user.setRole(rs.getString("role"));
+                user.setDepartmentId(rs.getInt("department_id"));
+                user.setDepartmentName(rs.getString("dept_name"));
+                user.setStatus(rs.getString("status"));
+                user.setCreatedAt(rs.getTimestamp("created_at"));
+                list.add(user);
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Error fetching active teachers: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * Deletes a user account by ID (Admin only).
+     * Used when a teacher leaves the college.
+     */
+    public boolean deleteUser(int userId) {
+        String sql = "DELETE FROM users WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("❌ Error deleting user: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
      * Updates user status (e.g., 'APPROVED' or 'REJECTED') by Admin.
      */
     public boolean updateStatus(int userId, String status) {
