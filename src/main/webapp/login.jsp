@@ -105,7 +105,10 @@
                     <label class="form-label fw-semibold">Password</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                        <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+                        <input type="password" name="password" id="loginPassword" class="form-control" placeholder="Enter password" required>
+                        <button class="btn btn-outline-secondary" type="button" id="togglePasswordBtn" onclick="togglePasswordVisibility('loginPassword', 'togglePasswordIcon')">
+                            <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -130,5 +133,20 @@
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function togglePasswordVisibility(inputId, iconId) {
+            const passInput = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (passInput.type === "password") {
+                passInput.type = "text";
+                icon.classList.remove("bi-eye");
+                icon.classList.add("bi-eye-slash");
+            } else {
+                passInput.type = "password";
+                icon.classList.remove("bi-eye-slash");
+                icon.classList.add("bi-eye-span", "bi-eye");
+            }
+        }
+    </script>
 </body>
 </html>

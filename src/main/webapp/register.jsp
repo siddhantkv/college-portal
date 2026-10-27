@@ -111,7 +111,12 @@
                 <!-- Password -->
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Password</label>
-                    <input type="password" name="password" class="form-control" placeholder="Minimum 6 characters" minlength="6" required>
+                    <div class="input-group">
+                        <input type="password" name="password" id="regPassword" class="form-control" placeholder="Minimum 6 characters" minlength="6" required>
+                        <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('regPassword', 'toggleRegPasswordIcon')">
+                            <i class="bi bi-eye" id="toggleRegPasswordIcon"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Role Selection -->
@@ -168,6 +173,19 @@
                 note.classList.remove("d-none");
             } else {
                 note.classList.add("d-none");
+            }
+        }
+        function togglePasswordVisibility(inputId, iconId) {
+            const passInput = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (passInput.type === "password") {
+                passInput.type = "text";
+                icon.classList.remove("bi-eye");
+                icon.classList.add("bi-eye-slash");
+            } else {
+                passInput.type = "password";
+                icon.classList.remove("bi-eye-slash");
+                icon.classList.add("bi-eye");
             }
         }
         // Run on load to retain state
