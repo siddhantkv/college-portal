@@ -65,6 +65,13 @@
                 </div>
             <% } %>
 
+            <% if ("reapplied".equalsIgnoreCase(regParam)) { %>
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <i class="bi bi-arrow-repeat me-2"></i>Your application has been <strong>re-submitted for Admin approval</strong>. You will be able to login once approved.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <% } %>
+
             <% if ("true".equalsIgnoreCase(loggedOut)) { %>
                 <div class="alert alert-info alert-dismissible fade show" role="alert">
                     <i class="bi bi-info-circle-fill me-2"></i>You have been logged out safely.

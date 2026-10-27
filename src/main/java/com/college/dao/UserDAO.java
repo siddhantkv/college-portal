@@ -14,6 +14,66 @@ import java.util.List;
 public class UserDAO {
 
     /**
+     * Checks if an email exists and returns the User object if found.
+     * Useful for checking status (e.g., if a rejected teacher is re-applying).
+     */
+    public User getUserByEmail(String email) {
+        String sql = "SELECT u.id, u.name, u.email, u.role, u.department_id, u.status, u.created_at, d.name AS dept_name " +
+                     "FROM users u " +
+                     "LEFT JOIN departments d ON u.department_id = d.id " +
+                     "WHERE u.email = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, email.trim().toLowerCase());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    User user = new User();
+                    user.setId(rs.getInt("id"));
+                    user.setName(rs.getString("name"));
+                    user.setEmail(rs.getString("email"));
+                    user.setRole(rs.getString("role"));
+                    user.setDepartmentId(rs.getInt("department_id"));
+                    user.setDepartmentName(rs.getString("dept_name"));
+                    user.setStatus(rs.getString("status"));
+                    user.setCreatedAt(rs.getTimestamp("created_at"));
+                    return user;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Error fetching user by email: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Re-applies a rejected user with updated details, new password hash, and resets status to PENDING.
+     */
+    public boolean reapplyUser(User user) {
+        String sql = "UPDATE users SET name = ?, password = ?, role = ?, department_id = ?, status = 'PENDING', created_at = CURRENT_TIMESTAMP WHERE email = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, user.getName());
+            ps.setString(2, user.getPassword());
+            ps.setString(3, user.getRole());
+            if (user.getDepartmentId() != null && user.getDepartmentId() > 0) {
+                ps.setInt(4, user.getDepartmentId());
+            } else {
+                ps.setNull(4, Types.INTEGER);
+            }
+            ps.setString(5, user.getEmail().trim().toLowerCase());
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("❌ Error re-applying user: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
      * Checks whether an email already exists in the database.
      */
     public boolean isEmailExists(String email) {

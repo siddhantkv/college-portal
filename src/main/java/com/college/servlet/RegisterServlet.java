@@ -86,10 +86,18 @@ public class RegisterServlet extends HttpServlet {
         }
 
         // Check if Email is already registered
-        if (userDAO.isEmailExists(email)) {
-            request.setAttribute("errorMessage", "This email is already registered. Please login instead.");
-            request.getRequestDispatcher("/register.jsp").forward(request, response);
-            return;
+        User existingUser = userDAO.getUserByEmail(email);
+        boolean isReapplying = false;
+
+        if (existingUser != null) {
+            // If the account was previously REJECTED, allow re-applying by updating the record
+            if ("REJECTED".equalsIgnoreCase(existingUser.getStatus())) {
+                isReapplying = true;
+            } else {
+                request.setAttribute("errorMessage", "This email is already registered. Please login instead.");
+                request.getRequestDispatcher("/register.jsp").forward(request, response);
+                return;
+            }
         }
 
         // 3. Password Hashing using BCrypt
@@ -100,14 +108,23 @@ public class RegisterServlet extends HttpServlet {
         // - Student accounts are immediately 'APPROVED'.
         String status = "STUDENT".equalsIgnoreCase(role) ? "APPROVED" : "PENDING";
 
-        User newUser = new User(name.trim(), email.trim().toLowerCase(), hashedPassword, role.toUpperCase(), departmentId, status);
+        User userRecord = new User(name.trim(), email.trim().toLowerCase(), hashedPassword, role.toUpperCase(), departmentId, status);
 
-        // 5. Save to Database
-        boolean isSuccess = userDAO.registerUser(newUser);
+        // 5. Save to Database (Insert new or update existing rejected record)
+        boolean isSuccess;
+        if (isReapplying) {
+            isSuccess = userDAO.reapplyUser(userRecord);
+        } else {
+            isSuccess = userDAO.registerUser(userRecord);
+        }
 
         if (isSuccess) {
             if ("TEACHER".equalsIgnoreCase(role)) {
-                response.sendRedirect(request.getContextPath() + "/login.jsp?registered=pending");
+                if (isReapplying) {
+                    response.sendRedirect(request.getContextPath() + "/login.jsp?registered=reapplied");
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/login.jsp?registered=pending");
+                }
             } else {
                 response.sendRedirect(request.getContextPath() + "/login.jsp?registered=success");
             }
